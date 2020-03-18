@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import './styles.scss';
-export default function Appointment(){
+import Header from 'components/Appointment/Header';
+import Show from 'components/Appointment/Show';
+import Empty from 'components/Appointment/Empty';
+export default function Appointment(props){
    return(
-    <article className="appointment"></article>
+      
+   <article className="appointment">
+      <Header time={props.time}/>
+      {props.interview?<Show interviewer = {props.interview.interviewer} student={props.interview.student}/> : <Empty onAdd={() => console.log("OnAdd")}/>}
+   </article>
    );
 }
