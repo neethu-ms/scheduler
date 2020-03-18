@@ -13,12 +13,12 @@ export default function(props){
   <section className="appointment__card-right">
     <section className="appointment__actions">
       <img
-        className="appointment__actions-button" onClick = {props.onEdit(props.student)}
+        className="appointment__actions-button" onClick = {props.onEdit && props.onEdit(props.student)}
         src="images/edit.png"
         alt="Edit"
       />
       <img
-        className="appointment__actions-button" onClick = {props.onDelete(props.student)}
+        className="appointment__actions-button" onClick = {props.onDelete && (props.student)}
         src="images/trash.png"
         alt="Delete"
       />
