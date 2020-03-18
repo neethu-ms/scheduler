@@ -7,8 +7,8 @@ export default function interviewListItem(props) {
 
   const interviewListClass = classNames("interviewers__item",
     {
-      "interviewers__item--selected": props.selected,
-      "selected":props.selected
+      "interviewers__item--selected": props.selected
+      
     }
   );
 
@@ -21,7 +21,7 @@ export default function interviewListItem(props) {
         src={props.avatar}
         alt={props.name}
       />
-      {props.name}
+      {props.selected && props.name}
     </li>
   );
 };
