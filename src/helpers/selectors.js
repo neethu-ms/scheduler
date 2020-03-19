@@ -1,4 +1,4 @@
-export default function getAppointmentsForDay(state, day) {
+export function getAppointmentsForDay(state, day) {
   const selectedDay = state.days.filter((eachDay) => eachDay.name === day)[0];
   const appointments = [];
   if (selectedDay) {
@@ -9,4 +9,23 @@ export default function getAppointmentsForDay(state, day) {
     }
   }
   return appointments;
+};
+
+export function getInterview(state, interview){
+   const interviewers = state.interviewers;
+   let processedInterview =null;
+   if(interview){
+    processedInterview = {
+      student : interview.student,
+      interviewer : {}
+    };
+  }
+
+   if(!interviewers || !interview){
+     return processedInterview;
+   }
+ 
+   processedInterview.interviewer = interviewers[interview.interviewer];
+   return processedInterview;
+
 };
