@@ -3,11 +3,34 @@ import './styles.scss';
 import Header from 'components/Appointment/Header';
 import Show from 'components/Appointment/Show';
 import Empty from 'components/Appointment/Empty';
+import useVisualMode from 'hooks/useVisualMode';
+import Form from 'components/Appointment/Form';
+
 export default function Appointment(props) {
+   const EMPTY = "EMPTY";
+   const SHOW = "SHOW";
+   const CREATE = "CREATE";
+   const BACK = "BACK";
+   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
+   console.log("props=", props);
    return (
       <article className="appointment">
          <Header time={props.time} />
-         {props.interview ? <Show interviewer={props.interview.interviewer} student={props.interview.student} /> : <Empty onAdd={() => console.log("OnAdd")} />}
+         {mode === EMPTY && <Empty onAdd={() => {
+            console.log("OnAdd");
+            transition(CREATE)
+         }
+         } />}
+         {mode === SHOW && <Show interviewer={props.interview.interviewer} student={props.interview.student} />}
+         {mode === CREATE && <Form interviewers={[]} onSave={() => { console.log("On Save") }} onCancel={() => {
+            console.log("On Cancel");
+            back(BACK);
+         }} />}
+         {mode === BACK && <Empty onAdd={() => {
+            console.log("OnAdd");
+            transition(CREATE)
+         }
+         } />}
       </article>
    );
 }
