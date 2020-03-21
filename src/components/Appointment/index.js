@@ -8,6 +8,7 @@ import Form from 'components/Appointment/Form';
 import axios from 'axios';
 import Status from './Status';
 import Confirm from './Confirm';
+import { transform } from '@babel/core';
 
 export default function Appointment(props) {
    const EMPTY = "EMPTY";
@@ -29,15 +30,14 @@ export default function Appointment(props) {
          [id]: appointment
       };
 
-      axios.put(`/api/appointments/${id}`, { interview: interview }).then((res) => 
-      {
+      axios.put(`/api/appointments/${id}`, { interview: interview }).then((res) => {
          props.setState({
             ...props.state,
             appointments
          });
-      transition(SHOW);
+         transition(SHOW);
       });
-      
+
    }
    function save(name, interviewer) {
       console.log('on save');
@@ -49,18 +49,18 @@ export default function Appointment(props) {
       bookInterview(props.id, interview);
    }
 
-   function deleteInterview(id,interview){
+   function deleteInterview(id, interview) {
       console.log('in delete');
       transition(CONFIRM);
-       //cancelInterview(id,interview);
-    }
+      //cancelInterview(id,interview);
+   }
 
-    function cancelInterview(id,interview){
-      
+   function cancelInterview(id, interview) {
+
       transition(DELETING);
       const appointment = {
          ...props.state.appointments[id],
-         interview:null
+         interview: null
       }
       const appointments = {
          ...props.state.appointments,
@@ -84,26 +84,42 @@ export default function Appointment(props) {
             transition(CREATE)
          }
          } />}
-         {mode === SHOW && <Show interviewer={props.interview.interviewer} student={props.interview.student} interview={props.interview} id={props.id}
-         onDelete = {(id,interview) => {deleteInterview(id,interview)}}/>}
-         {mode === CREATE && <Form interviewers={props.interviewers}
-            onSave={(name, interviewer) => {
-               console.log('on save');
-               save(name, interviewer);
-            }}
-            onCancel={() => {
-               back(BACK);
-            }} />}
-         {mode === BACK && <Empty onAdd={() => {
-            console.log("OnAdd");
-            transition(CREATE)
-         }
-         } />}
-         {mode === SAVING && <Status message="Loading"/>}
-         {mode === CONFIRM && <Confirm id={props.id} interview={props.interview} message="Are you sure you would like to delete" 
-         onCancel={() => transition(SHOW)} onConfirm={(id,interview) => cancelInterview(id,interview)}/>}
-         {mode === DELETING && <Status message="Deleting"/>}
+         {mode === SHOW &&
+            <Show interviewer={props.interview.interviewer}
+               student={props.interview.student}
+               interview={props.interview} id={props.id}
+               onDelete={(id, interview) => { deleteInterview(id, interview) }}
+               onEdit={
+                  (name, interviewer) => {
+                     console.log('on edit');
+                     transition(CREATE);
+                  }
+               }
+            />}
+
+         {mode === CREATE &&
+            <Form interviewers={props.interviewers}
+               interviewer={(props.interview) ? props.state.appointments[props.id].interview.interviewer : null}
+               name={(props.interview) ? props.interview.student : null}
+               onSave={(name, interviewer) => {
+                  console.log('on save');
+                  save(name, interviewer);
+               }}
+               onCancel={() => {
+                  back(BACK);
+               }} />}
+
+         {mode === SAVING &&
+            <Status message="Loading" />}
+         {
+            mode === CONFIRM &&
+            <Confirm id={props.id}
+               interview={props.interview}
+               message="Are you sure you would like to delete"
+               onCancel={() => transition(SHOW)}
+               onConfirm={(id, interview) => cancelInterview(id, interview)} />}
+         {mode === DELETING &&
+            <Status message="Deleting" />}
       </article>
    );
 }
-/*() => transition(SHOW) */
