@@ -6,17 +6,16 @@ import Empty from 'components/Appointment/Empty';
 import useVisualMode from 'hooks/useVisualMode';
 import Form from 'components/Appointment/Form';
 import axios from 'axios';
+import Status from './Status';
 
 export default function Appointment(props) {
    const EMPTY = "EMPTY";
    const SHOW = "SHOW";
    const CREATE = "CREATE";
    const BACK = "BACK";
+   const SAVING = "SAVING";
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
-   console.log("props interviewers=", props.interviewers);
    function bookInterview(id, interview) {
-      console.log("props", props);
-      console.log(id, interview);
       const appointment = {
          ...props.state.appointments[id],
          interview: { ...interview }
@@ -26,12 +25,16 @@ export default function Appointment(props) {
          ...props.state.appointments,
          [id]: appointment
       };
-      props.setState({
-         ...props.state,
-         appointments
-      });
-      axios.put(`/api/appointments/${id}`, { interview: interview }).then((res) => console.log("result=", res));
+
+      axios.put(`/api/appointments/${id}`, { interview: interview }).then((res) => 
+      {
+         props.setState({
+            ...props.state,
+            appointments
+         });
       transition(SHOW);
+      });
+      
    }
    function save(name, interviewer) {
       console.log('on save');
@@ -39,6 +42,7 @@ export default function Appointment(props) {
          student: name,
          interviewer
       };
+      transition(SAVING);
       bookInterview(props.id, interview);
    }
    return (
@@ -63,6 +67,7 @@ export default function Appointment(props) {
             transition(CREATE)
          }
          } />}
+         {mode === SAVING && <Status message="Loading"/>}
       </article>
    );
 }
