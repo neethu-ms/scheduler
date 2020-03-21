@@ -13,6 +13,34 @@ export default function Appointment(props) {
    const BACK = "BACK";
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
    console.log("props interviewers=", props.interviewers);
+   function bookInterview(id, interview) {
+      console.log("props",props);
+      console.log(id, interview);
+      const appointment = {
+         ...props.state.appointments[id],
+         interview: { ...interview }
+       };
+
+       const appointments = {
+         ...props.state.appointments,
+         [id]: appointment
+       };
+        props.setState({
+           ...props.state,
+           appointments
+        });
+        transition(SHOW);
+    }
+    function save(name, interviewer) {
+       console.log('on save');
+      const interview = {
+        student: name,
+        interviewer
+      };
+
+       bookInterview(props.id,interview);
+      
+    }
    return (
       <article className="appointment">
          <Header time={props.time} />
@@ -22,7 +50,10 @@ export default function Appointment(props) {
          }
          } />}
          {mode === SHOW && <Show interviewer={props.interview.interviewer} student={props.interview.student} />}
-         {mode === CREATE && <Form interviewers={props.interviewers} onSave={() => { console.log("On Save") }} onCancel={() => {
+         {mode === CREATE && <Form interviewers={props.interviewers} 
+         onSave={(name,interviewer) => { console.log('on save');
+         save(name,interviewer); }} 
+         onCancel={() => {
             back(BACK);
          }} />}
          {mode === BACK && <Empty onAdd={() => {
