@@ -36,6 +36,8 @@ export default function Application(props) {
       {...appointment}
       interview={interview}
       interviewers = {interviewers}
+      state = {state}
+      setState={(state) => setState(state)}
       />
   });
 
