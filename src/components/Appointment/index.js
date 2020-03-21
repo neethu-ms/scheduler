@@ -8,7 +8,7 @@ import Form from 'components/Appointment/Form';
 import axios from 'axios';
 import Status from './Status';
 import Confirm from './Confirm';
-import { transform } from '@babel/core';
+import Error from 'components/Appointment/Error';
 
 export default function Appointment(props) {
    const EMPTY = "EMPTY";
@@ -18,6 +18,8 @@ export default function Appointment(props) {
    const SAVING = "SAVING";
    const CONFIRM = "CONFIRM";
    const DELETING = "DELETING";
+   const ERROR_SAVE = "ERROR_SAVE";
+   const ERROR_DELETE = "ERROR_DELETE";
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
    function bookInterview(id, interview) {
       const appointment = {
@@ -36,7 +38,7 @@ export default function Appointment(props) {
             appointments
          });
          transition(SHOW);
-      });
+      }).catch(err => transition(ERROR_SAVE,true));
 
    }
    function save(name, interviewer) {
@@ -52,11 +54,9 @@ export default function Appointment(props) {
    function deleteInterview(id, interview) {
       console.log('in delete');
       transition(CONFIRM);
-      //cancelInterview(id,interview);
    }
 
    function cancelInterview(id, interview) {
-
       transition(DELETING);
       const appointment = {
          ...props.state.appointments[id],
@@ -72,7 +72,7 @@ export default function Appointment(props) {
             appointments
          });
          transition(EMPTY);
-      });
+      }).catch(err => transition(ERROR_DELETE,true));
    }
 
 
@@ -111,8 +111,7 @@ export default function Appointment(props) {
 
          {mode === SAVING &&
             <Status message="Loading" />}
-         {
-            mode === CONFIRM &&
+         {mode === CONFIRM &&
             <Confirm id={props.id}
                interview={props.interview}
                message="Are you sure you would like to delete"
@@ -120,6 +119,14 @@ export default function Appointment(props) {
                onConfirm={(id, interview) => cancelInterview(id, interview)} />}
          {mode === DELETING &&
             <Status message="Deleting" />}
+
+         {mode === ERROR_DELETE &&
+          <Error message="Could not cancel appointment" onClose={() => 
+            {
+               
+               back()}
+            }/>
+         }
       </article>
    );
 }
