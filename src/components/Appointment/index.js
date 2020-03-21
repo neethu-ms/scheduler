@@ -5,6 +5,7 @@ import Show from 'components/Appointment/Show';
 import Empty from 'components/Appointment/Empty';
 import useVisualMode from 'hooks/useVisualMode';
 import Form from 'components/Appointment/Form';
+import axios from 'axios';
 
 export default function Appointment(props) {
    const EMPTY = "EMPTY";
@@ -14,33 +15,32 @@ export default function Appointment(props) {
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
    console.log("props interviewers=", props.interviewers);
    function bookInterview(id, interview) {
-      console.log("props",props);
+      console.log("props", props);
       console.log(id, interview);
       const appointment = {
          ...props.state.appointments[id],
          interview: { ...interview }
-       };
-
-       const appointments = {
-         ...props.state.appointments,
-         [id]: appointment
-       };
-        props.setState({
-           ...props.state,
-           appointments
-        });
-        transition(SHOW);
-    }
-    function save(name, interviewer) {
-       console.log('on save');
-      const interview = {
-        student: name,
-        interviewer
       };
 
-       bookInterview(props.id,interview);
-      
-    }
+      const appointments = {
+         ...props.state.appointments,
+         [id]: appointment
+      };
+      props.setState({
+         ...props.state,
+         appointments
+      });
+      axios.put(`/api/appointments/${id}`, { interview: interview }).then((res) => console.log("result=", res));
+      transition(SHOW);
+   }
+   function save(name, interviewer) {
+      console.log('on save');
+      const interview = {
+         student: name,
+         interviewer
+      };
+      bookInterview(props.id, interview);
+   }
    return (
       <article className="appointment">
          <Header time={props.time} />
@@ -50,12 +50,14 @@ export default function Appointment(props) {
          }
          } />}
          {mode === SHOW && <Show interviewer={props.interview.interviewer} student={props.interview.student} />}
-         {mode === CREATE && <Form interviewers={props.interviewers} 
-         onSave={(name,interviewer) => { console.log('on save');
-         save(name,interviewer); }} 
-         onCancel={() => {
-            back(BACK);
-         }} />}
+         {mode === CREATE && <Form interviewers={props.interviewers}
+            onSave={(name, interviewer) => {
+               console.log('on save');
+               save(name, interviewer);
+            }}
+            onCancel={() => {
+               back(BACK);
+            }} />}
          {mode === BACK && <Empty onAdd={() => {
             console.log("OnAdd");
             transition(CREATE)
