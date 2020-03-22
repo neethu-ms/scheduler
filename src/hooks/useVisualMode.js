@@ -5,7 +5,7 @@ export default function useVisualMode(initial) {
 
   function transition(transitionMode, replace) {
     //let currentMode = mode;
-
+    console.log('transitionMode', transitionMode);
 
     if (replace) {
       setHistory(() => {

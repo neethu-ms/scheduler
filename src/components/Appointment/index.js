@@ -21,7 +21,8 @@ export default function Appointment(props) {
    const ERROR_SAVE = "ERROR_SAVE";
    const ERROR_DELETE = "ERROR_DELETE";
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
-   function bookInterview(id, interview) {
+   //const { mode, transition, back } = useVisualMode();
+   /* function bookInterview(id, interview) {
       const appointment = {
          ...props.state.appointments[id],
          interview: { ...interview }
@@ -40,7 +41,7 @@ export default function Appointment(props) {
          transition(SHOW);
       }).catch(err => transition(ERROR_SAVE,true));
 
-   }
+   }*/
    function save(name, interviewer) {
       console.log('on save');
       const interview = {
@@ -48,33 +49,21 @@ export default function Appointment(props) {
          interviewer
       };
       transition(SAVING);
-      bookInterview(props.id, interview);
-   }
-
-   function deleteInterview(id, interview) {
-      console.log('in delete');
-      transition(CONFIRM);
-   }
-
-   function cancelInterview(id, interview) {
-      transition(DELETING);
-      const appointment = {
-         ...props.state.appointments[id],
-         interview: null
+      if((props.bookInterview(props.id, interview)) === "ERROR"){
+         transition(ERROR_SAVE);
+      }else{
+         transition(SHOW);
       }
-      const appointments = {
-         ...props.state.appointments,
-         [id]: appointment
-      };
-      axios.delete(`/api/appointments/${id}`).then(() => {
-         props.setState({
-            ...props.state,
-            appointments
-         });
-         transition(EMPTY);
-      }).catch(err => transition(ERROR_DELETE,true));
    }
-
+   function destroy(id, interview) {
+      console.log('in delete');
+      transition(DELETING);
+      if(props.cancelInterview(id, interview) === "ERROR"){
+         transition(ERROR_DELETE)
+      }else{
+         transition(EMPTY)
+      }
+   }
 
    return (
       <article className="appointment">
@@ -85,14 +74,13 @@ export default function Appointment(props) {
          }
          } />}
          {mode === SHOW &&
-            <Show interviewer={props.interview.interviewer}
-               student={props.interview.student}
+            <Show interviewer={(props.interview)?props.interview.interviewer:null}
+               student={(props.interview)?props.interview.student:null}
                interview={props.interview} id={props.id}
-               onDelete={(id, interview) => { deleteInterview(id, interview) }}
+               onDelete={() => { transition(CONFIRM) }}
                onEdit={
-                  (name, interviewer) => {
-                     console.log('on edit');
-                     transition(CREATE);
+                  () => {
+                   transition(CREATE);
                   }
                }
             />}
@@ -102,7 +90,7 @@ export default function Appointment(props) {
                interviewer={(props.interview) ? props.state.appointments[props.id].interview.interviewer : null}
                name={(props.interview) ? props.interview.student : null}
                onSave={(name, interviewer) => {
-                  console.log('on save');
+                  console.log('on save:','name=',name,'interviewer=',interviewer);
                   save(name, interviewer);
                }}
                onCancel={() => {
@@ -116,12 +104,19 @@ export default function Appointment(props) {
                interview={props.interview}
                message="Are you sure you would like to delete"
                onCancel={() => transition(SHOW)}
-               onConfirm={(id, interview) => cancelInterview(id, interview)} />}
+               onConfirm={(id, interview) => destroy(id, interview)} />}
          {mode === DELETING &&
             <Status message="Deleting" />}
 
          {mode === ERROR_DELETE &&
           <Error message="Could not cancel appointment" onClose={() => 
+            {
+               
+               back()}
+            }/>
+         }
+                  {mode === ERROR_SAVE &&
+          <Error message="Could not create appointment" onClose={() => 
             {
                
                back()}
