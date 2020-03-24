@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import useVisualMode from 'hooks/useVisualMode';
 export default function useApplicationData() {
-    const [state, setState] = useState({
+  const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
@@ -20,16 +19,16 @@ export default function useApplicationData() {
 
   }, []);
   const setDay = day => setState((prev) => ({ ...prev, day }));
-  const getUpdatedDays = function(day,days,spots){
+  const getUpdatedDays = function (day, days, spots) {
     let updatedDays = days.slice();
     let currentDay = days.filter((eachDay) => eachDay.name === day)[0];
-       currentDay.spots += spots ;
-       updatedDays[currentDay.id-1] = currentDay;
-       return updatedDays;
-      }
+    currentDay.spots += spots;
+    updatedDays[currentDay.id - 1] = currentDay;
+    return updatedDays;
+  }
   const bookInterview = function bookInterview(id, interview) {
-    let days = getUpdatedDays(state.day,state.days,-1);
-               const appointment = {
+    let days = getUpdatedDays(state.day, state.days, -1);
+    const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
@@ -44,13 +43,13 @@ export default function useApplicationData() {
         days
 
       });
-           return res;
+      return res;
     }).catch(err => {
-            return err;
+      return err;
     });
   };
   const cancelInterview = function cancelInterview(id, interview) {
-    let days = getUpdatedDays(state.day,state.days,1);
+    let days = getUpdatedDays(state.day, state.days, 1);
     const appointment = {
       ...state.appointments[id],
       interview: null
