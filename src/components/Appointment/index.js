@@ -78,7 +78,7 @@ export default function Appointment(props) {
                }} />}
 
          {mode === SAVING &&
-            <Status message="Loading" />}
+            <Status message="Saving" />}
          {mode === CONFIRM &&
             <Confirm id={props.id}
                interview={props.interview}
