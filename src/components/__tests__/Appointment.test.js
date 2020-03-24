@@ -4,7 +4,7 @@ import Application from "components/Application";
 import interviewListItem from 'components/InterviewerListItem';
 
 describe("Appointment", () => {
-test("renders without crashing",() => {
+xit("renders without crashing",() => {
    render(<Application />);
 }); 
 });
