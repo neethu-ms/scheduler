@@ -26,8 +26,12 @@ export default function useApplicationData() {
     updatedDays[currentDay.id - 1] = currentDay;
     return updatedDays;
   }
-  const bookInterview = function bookInterview(id, interview) {
-    let days = getUpdatedDays(state.day, state.days, -1);
+  const bookInterview = function bookInterview(id, interview,edit) {
+    console.log("edit=",edit);
+    let days = state.days;
+    if(!edit){
+     days = getUpdatedDays(state.day, state.days, -1);
+    }
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
