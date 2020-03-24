@@ -8,8 +8,10 @@ import Form from 'components/Appointment/Form';
 import Status from './Status';
 import Confirm from './Confirm';
 import Error from 'components/Appointment/Error';
+import { checkPropTypes } from 'prop-types';
 
 export default function Appointment(props) {
+   const EDIT = "EDIT";
    const EMPTY = "EMPTY";
    const SHOW = "SHOW";
    const CREATE = "CREATE";
@@ -20,20 +22,20 @@ export default function Appointment(props) {
    const ERROR_SAVE = "ERROR_SAVE";
    const ERROR_DELETE = "ERROR_DELETE";
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
-   function save(name, interviewer) {
+   function save(name, interviewer,edit) {
       const interview = {
          student: name,
          interviewer
       };
       transition(SAVING);
-      props.bookInterview(props.id, interview).then((res) => transition(SHOW)).catch(err => transition(ERROR_SAVE))
+      props.bookInterview(props.id, interview,edit).then((res) => transition(SHOW)).catch(err => transition(ERROR_SAVE))
    }
    function destroy(id, interview) {
       transition(DELETING);
       props.cancelInterview(id, interview).then((res) => transition(EMPTY))
          .catch(err => transition(ERROR_DELETE))
    }
-
+  let editValue = false;
    return (
       <article className="appointment">
          <Header time={props.time} />
@@ -48,17 +50,29 @@ export default function Appointment(props) {
                onDelete={() => { transition(CONFIRM) }}
                onEdit={
                   () => {
-                     transition(CREATE);
+                     transition(EDIT);
+                     
                   }
                }
             />}
 
-         {mode === CREATE &&
+         {mode === EDIT &&
             <Form interviewers={props.interviewers}
                interviewer={(props.interview) ? props.state.appointments[props.id].interview.interviewer : null}
                name={(props.interview) ? props.interview.student : null}
-               onSave={(name, interviewer) => {
-                  save(name, interviewer);
+                  onSave={(name, interviewer) => {
+                  save(name, interviewer,true);
+               }}
+               onCancel={() => {
+                  back(BACK);
+               }} />}
+
+         {mode === CREATE &&
+            <Form interviewers={props.interviewers}
+               interviewer={null}
+               name={null}
+                  onSave={(name, interviewer) => {
+                  save(name, interviewer,editValue);
                }}
                onCancel={() => {
                   back(BACK);
