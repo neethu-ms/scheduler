@@ -20,12 +20,15 @@ export default function useApplicationData() {
   }, []);
   const setDay = day => setState((prev) => ({ ...prev, day }));
   const getUpdatedDays = function (day, days, spots) {
-    return days.map((eachDay) => {
-      if (eachDay === day) {
-        return { ...day, spots: day.spots + spots };
+    let updatedDays =  days.map((eachDay) => {
+          if (eachDay.name === day) {
+        
+        return { ...eachDay, spots: eachDay.spots + spots };
       }
-      return null;
-    })
+      return eachDay;
+    });
+   
+    return updatedDays;
   }
   const bookInterview = function bookInterview(id, interview, edit) {
     let days = state.days;
