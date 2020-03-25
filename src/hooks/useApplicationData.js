@@ -20,17 +20,17 @@ export default function useApplicationData() {
   }, []);
   const setDay = day => setState((prev) => ({ ...prev, day }));
   const getUpdatedDays = function (day, days, spots) {
-    let updatedDays = days.slice();
-    let currentDay = days.filter((eachDay) => eachDay.name === day)[0];
-    currentDay.spots += spots;
-    updatedDays[currentDay.id - 1] = currentDay;
-    return updatedDays;
+    return days.map((eachDay) => {
+      if (eachDay === day) {
+        return { ...day, spots: day.spots + spots };
+      }
+      return null;
+    })
   }
-  const bookInterview = function bookInterview(id, interview,edit) {
-    console.log("edit=",edit);
+  const bookInterview = function bookInterview(id, interview, edit) {
     let days = state.days;
-    if(!edit){
-     days = getUpdatedDays(state.day, state.days, -1);
+    if (!edit) {
+      days = getUpdatedDays(state.day, state.days, -1);
     }
     const appointment = {
       ...state.appointments[id],
@@ -48,8 +48,6 @@ export default function useApplicationData() {
 
       });
       return res;
-    }).catch(err => {
-      return err;
     });
   };
   const cancelInterview = function cancelInterview(id, interview) {
@@ -69,9 +67,7 @@ export default function useApplicationData() {
         days
       });
       return res;
-    }).catch(err => {
-      return err;
-    });
+    })
   }
   return { state, setDay, bookInterview, cancelInterview };
 };
