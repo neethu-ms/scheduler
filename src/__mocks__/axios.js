@@ -116,7 +116,7 @@ export default {
 }
 
 
-  if (url.includes("/api/appointments/")) {
+  if (url.match("/api/appointments/")) {
       return Promise.resolve({
       status: 204,
       statusText: "No Content"
