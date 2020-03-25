@@ -90,7 +90,7 @@ export default {
       }); 
    }
 
-     if (url === "/api/appointments/1") {
+     if (url.match("/api/appointments/")) {
       return Promise.resolve({
         status: 204,
         statusText: "No Content"
