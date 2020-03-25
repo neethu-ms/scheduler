@@ -82,7 +82,7 @@ export default {
   }),
 
    put: jest.fn(url => {
-       if (url === "/api/days") {
+       if (url.match("/api/days")) {
       return Promise.resolve({
         status: 204,
         statusText: "No Content"
@@ -97,7 +97,7 @@ export default {
       });
     }
 
-    if (url === "/api/interviewers") {
+    if (url.match("/api/interviewers")) {
       return Promise.resolve({
         status: 204,
         statusText: "No Content"
@@ -107,7 +107,7 @@ export default {
 
 
   delete: jest.fn(url => {
-       if (url === "/api/days") {
+       if (url.match("/api/days")) {
       return Promise.resolve({
       status: 204,
       statusText: "No Content"
@@ -123,7 +123,7 @@ export default {
    })
  }
 
- if (url === "/api/interviewers") {
+ if (url.match("/api/interviewers")) {
     return Promise.resolve({
      status: 204,
      statusText: "No Content"
