@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
+    "node-sass": "^4.13.1",
     "normalize.css": "^8.0.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -42,7 +43,6 @@
     "@testing-library/react": "^8.0.9",
     "@testing-library/react-hooks": "^3.2.1",
     "jest": "24.9.0",
-    "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react-test-renderer": "^16.13.1"
   },
