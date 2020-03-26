@@ -9,7 +9,6 @@ import Status from './Status';
 import Confirm from './Confirm';
 import Error from 'components/Appointment/Error';
 
-
 export default function Appointment(props) {
    const EDIT = "EDIT";
    const EMPTY = "EMPTY";
@@ -21,18 +20,22 @@ export default function Appointment(props) {
    const DELETING = "DELETING";
    const ERROR_SAVE = "ERROR_SAVE";
    const ERROR_DELETE = "ERROR_DELETE";
+   // Setting initial Mode based on the available data
    const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
+   // Save an appointmnet. edit keeps track of the call. If call is from edit appointment , then it will be true. If it is from create appointment it will be false
    function save(name, interviewer, edit) {
       const interview = {
          student: name,
          interviewer
       };
-      transition(SAVING);
-      props.bookInterview(props.id, interview, edit).then((res) => transition(SHOW)).catch(err => transition(ERROR_SAVE))
+      transition(SAVING); // Keeps showing till save is complete or error is thrown
+      props.bookInterview(props.id, interview, edit).then((res) => transition(SHOW)).catch(err => transition(ERROR_SAVE)) //Returns to Show, once save is complete , else to Error window
    }
+
+   // To cancel an appointment
    function destroy(id, interview) {
-      transition(DELETING);
-      props.cancelInterview(id, interview).then((res) => transition(EMPTY))
+      transition(DELETING);  // Keeps showing till delete is complete or error is thrown
+      props.cancelInterview(id, interview).then((res) => transition(EMPTY))    // Returns to Empty on successful deletion or else to Error window
          .catch(err => transition(ERROR_DELETE))
    }
 

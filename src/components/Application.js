@@ -6,26 +6,26 @@ import { getAppointmentsForDay, getInterview, getInterviewersForDay } from '../h
 import useApplicationData from 'hooks/useApplicationData';
 
 export default function Application(props) {
-
   const {
     state,
     setDay,
     bookInterview,
     cancelInterview
-  } = useApplicationData();
-  
+  } = useApplicationData();   // Gets all state information
+
   const appointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
+  // Load all appointments and pass required properties to child
   const schedule = appointments.map(appointment => {
-    const interview = getInterview(state, appointment.interview);
-        return <Appointment key={appointment.id}
+    const interview = getInterview(state, appointment.interview);  //Gets interview details
+    return <Appointment key={appointment.id}
       {...appointment}
       interview={interview}
-      interviewers = {interviewers}
-      state = {state}
-      bookInterview = {bookInterview}
-      cancelInterview = {cancelInterview}
-      />
+      interviewers={interviewers}
+      state={state}
+      bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
+    />
   });
 
   return (

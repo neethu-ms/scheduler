@@ -15,10 +15,10 @@ export default function (props) {
     props.onCancel();
   }
 
-  function validate(){
-    if(name === ""){
-        setError("Student name cannot be blank");
-        return;
+  function validate() {
+    if (name === "") {
+      setError("Student name cannot be blank");
+      return;
     }
     setError("");
     props.onSave(name, interviewer);
@@ -28,8 +28,8 @@ export default function (props) {
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
         <form autoComplete="off" onSubmit={(event) => event.preventDefault()}>
-          <input onChange={(evt) => setName(evt.target.value)} 
-            data-testid = "student-name-input"
+          <input onChange={(evt) => setName(evt.target.value)}
+            data-testid="student-name-input"
             className="appointment__create-input text--semi-bold"
             value={name}
             type="text"

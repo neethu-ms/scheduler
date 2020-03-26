@@ -1,3 +1,4 @@
+// Mock data and routes for axios
 const fixtures = {
   days: [
     {
@@ -104,7 +105,6 @@ export default {
       });
     }
   }),
-
 
   delete: jest.fn(url => {
        if (url.match("/api/days")) {

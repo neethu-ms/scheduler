@@ -3,10 +3,8 @@ export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
 
+  // Transitions mode to transition mode. If replace is true, then replaces history. Else adds to the history
   function transition(transitionMode, replace) {
-    //let currentMode = mode;
-    console.log('transitionMode', transitionMode);
-
     if (replace) {
       setHistory(() => {
         if (history) {
@@ -27,6 +25,8 @@ export default function useVisualMode(initial) {
       return transitionMode;
     });
   }
+
+  // Mode changes to the previous mode that is available in history.
   function back() {
     //set Mode to the one in history
     setMode(() => {

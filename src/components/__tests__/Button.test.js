@@ -54,6 +54,5 @@ it.skip("renders a disabled button", () => {
   const button = getByText("Disabled");
 
   fireEvent.click(button);
-
   expect(handleClick).toHaveBeenCalledTimes(0);
 });

@@ -7,10 +7,11 @@ import '../styles/InterviewerList.scss';
 InterviewList.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired
-};
+}; // Adding type validation for props
 
 export default function InterviewList(props) {
   const interviewers = props.interviewers;
+  // Loading interviewers
   const interviewerList = interviewers.map(interviewer => {
     return (<InterviewerListItem key={interviewer.id}
       name={interviewer.name}

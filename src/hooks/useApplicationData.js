@@ -7,6 +7,7 @@ export default function useApplicationData() {
     appointments: {},
     interviewers: {}
   });
+  // Loads initial data
   useEffect(() => {
     Promise.all([
       Promise.resolve(axios.get('/api/days')),
@@ -19,17 +20,20 @@ export default function useApplicationData() {
 
   }, []);
   const setDay = day => setState((prev) => ({ ...prev, day }));
+
+  // Update days with correct spots. spots can be +1 or -1 based on whether it is cancel or book of appointment,
   const getUpdatedDays = function (day, days, spots) {
-    let updatedDays =  days.map((eachDay) => {
-          if (eachDay.name === day) {
-        
+    let updatedDays = days.map((eachDay) => {
+      if (eachDay.name === day) {
         return { ...eachDay, spots: eachDay.spots + spots };
       }
       return eachDay;
     });
-   
+
     return updatedDays;
   }
+
+  //Books an interview. 
   const bookInterview = function bookInterview(id, interview, edit) {
     let days = state.days;
     if (!edit) {
@@ -53,6 +57,8 @@ export default function useApplicationData() {
       return res;
     });
   };
+
+  //Cancels an interview
   const cancelInterview = function cancelInterview(id, interview) {
     let days = getUpdatedDays(state.day, state.days, 1);
     const appointment = {
