@@ -35,7 +35,17 @@ npm run storybook
 npm run cypress
 ```
 
-## Getting Started
+## Deployment
+
+1. Api server - heroku
+2. Continuous integration for scheduler app- circleci
+3. Scheduler App - Netlify
+
+## Quick start
+
+Go to https://interview-scheduler-react.netlify.app/
+
+## Getting Started in local machine
 
 1. Complete the setup and then Go to <http://localhost:8080/> in your browser
 
